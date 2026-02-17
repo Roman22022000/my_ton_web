@@ -5,53 +5,10 @@
 <title>Garbage Drop</title>
 
 <style>
-
-:root{
-      --bg:#07080b;
-    }
-
-    *{ box-sizing:border-box; }
-    html,body{
-      height:100%;
-      margin:0;
-      overflow:hidden;
-      background:var(--bg);
-    }
-
-    /* --- background: dots + animated gradient glow --- */
-    .stage{
-      position:fixed;
-      inset:0;
-      background:
-        radial-gradient(circle at 1px 1px, rgba(255,255,255,.10) 1px, transparent 1px) 0 0 / 22px 22px,
-        radial-gradient(1200px 700px at 20% 30%, rgba(124,92,255,.18), transparent 60%),
-        radial-gradient(900px 500px at 80% 70%, rgba(34,211,238,.14), transparent 60%),
-        linear-gradient(180deg, #07080b, #060710);
-      filter: saturate(1.05);
-    }
-
-    .glow{
-      position:absolute;
-      inset:-20%;
-      background:
-        radial-gradient(900px 600px at var(--gx,30%) var(--gy,30%), rgba(124,92,255,.22), transparent 55%),
-        radial-gradient(800px 520px at var(--hx,70%) var(--hy,70%), rgba(34,211,238,.16), transparent 60%),
-        radial-gradient(700px 500px at 50% 20%, rgba(255,61,127,.10), transparent 65%);
-      animation: drift 10s linear infinite;
-      pointer-events:none;
-      mix-blend-mode: screen;
-    }
-
-    @keyframes drift{
-      0%   { transform: translate3d(-1.5%, -1.0%, 0) rotate(0deg); }
-      50%  { transform: translate3d( 1.5%,  1.0%, 0) rotate(2deg); }
-      100% { transform: translate3d(-1.5%, -1.0%, 0) rotate(0deg); }
-    }
-    
 body{
     margin:0;
     overflow:hidden;
-    background:#111;
+    background:#07080b;
     font-family:Arial, sans-serif;
     color:white;
 }
@@ -106,9 +63,45 @@ body{
 .item span{
     font-size:16px;
 }
+
+.stage{
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at 1px 1px, rgba(255,255,255,.10) 1px, transparent 1px) 0 0 / 22px 22px,
+        radial-gradient(1200px 700px at 20% 30%, rgba(124,92,255,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 70%, rgba(34,211,238,.14), transparent 60%),
+        linear-gradient(180deg, #07080b, #060710);
+    filter: saturate(1.05);
+    z-index:-2;
+}
+
+.glow{
+    position:absolute;
+    inset:-20%;
+    background:
+        radial-gradient(900px 600px at var(--gx,30%) var(--gy,30%), rgba(124,92,255,.22), transparent 55%),
+        radial-gradient(800px 520px at var(--hx,70%) var(--hy,70%), rgba(34,211,238,.16), transparent 60%),
+        radial-gradient(700px 500px at 50% 20%, rgba(255,61,127,.10), transparent 65%);
+    animation: drift 10s linear infinite;
+    pointer-events:none;
+    mix-blend-mode: screen;
+    z-index:-1;
+}
+
+@keyframes drift{
+    0%   { transform: translate3d(-1.5%, -1.0%, 0) rotate(0deg); }
+    50%  { transform: translate3d( 1.5%,  1.0%, 0) rotate(2deg); }
+    100% { transform: translate3d(-1.5%, -1.0%, 0) rotate(0deg); }
+}
+
 </style>
 </head>
 <body>
+
+<div class="stage">
+    <div class="glow" id="glow"></div>
+</div>
 
 <img id="bag" src="bag.png">
 
@@ -206,34 +199,30 @@ bag.addEventListener("click", () => {
 
 spawnBag();
 
- <script>
-    // ---- Animated glow drift (from original code) ----
-    const glow = document.getElementById("glow");
+const glow = document.getElementById("glow");
 
-    let t0 = performance.now();
-    function anim(){
-      const t = (performance.now() - t0) * 0.0003;
+let t0 = performance.now();
 
-      const gx = 30 + Math.sin(t*1.2) * 18;
-      const gy = 30 + Math.cos(t*1.1) * 14;
+function anim(){
+    const t = (performance.now() - t0) * 0.0003;
 
-      const hx = 70 + Math.cos(t*0.9) * 16;
-      const hy = 70 + Math.sin(t*1.0) * 12;
+    const gx = 30 + Math.sin(t*1.2) * 18;
+    const gy = 30 + Math.cos(t*1.1) * 14;
 
-      glow.style.setProperty("--gx", gx + "%");
-      glow.style.setProperty("--gy", gy + "%");
-      glow.style.setProperty("--hx", hx + "%");
-      glow.style.setProperty("--hy", hy + "%");
+    const hx = 70 + Math.cos(t*0.9) * 16;
+    const hy = 70 + Math.sin(t*1.0) * 12;
 
-      requestAnimationFrame(anim);
-    }
-    anim();
+    glow.style.setProperty("--gx", gx + "%");
+    glow.style.setProperty("--gy", gy + "%");
+    glow.style.setProperty("--hx", hx + "%");
+    glow.style.setProperty("--hy", hy + "%");
+
+    requestAnimationFrame(anim);
+}
+
+anim();
 
 </script>
 
 </body>
 </html>
-
-
-
-
